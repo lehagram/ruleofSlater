@@ -14,7 +14,8 @@ from fbs_runtime import PUBLIC_SETTINGS
 from fbs_runtime.application_context.PyQt6 import ApplicationContext
 
 import numpy as np
-from PyQt6.QtWidgets import QWidget, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QLineEdit, QSpinBox, QDoubleSpinBox, QGroupBox, QLabel
+from PyQt6.QtWidgets import QWidget, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QLineEdit, QSpinBox,\
+    QDoubleSpinBox, QGroupBox, QLabel, QSpacerItem, QSizePolicy
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QAction, QFont
 
@@ -91,17 +92,18 @@ class AppContext(ApplicationContext):
 
         # font config
         font = QFont()
-        font.setFamily("Courier")
+        font.setFamily("Monospace")
         font.setStyleHint(QFont.StyleHint.Monospace)
         font.setFixedPitch(True)
         font.setPointSize(14)
 
         self.window = QMainWindow()
         wind = self.window
+        wind.font = font
         wind.setFont(font)
         wind.title = 'Rule of Slater v'
-        wind.left = 0
-        wind.top = 0
+        wind.left = 400
+        wind.top = 200
         wind.width = 350
         wind.height = 100
         wind.setWindowTitle(wind.title + PUBLIC_SETTINGS['version'])
@@ -143,15 +145,20 @@ class calculator(QWidget):
         at.layout = QHBoxLayout(at)
         at.Z = QSpinBox(); at.Zl = QLabel("Z")
         at.sym = QLineEdit(); at.syml = QLabel("element")
+        at.sym.setFixedWidth(50)
         at.layout.addWidget(at.Zl); at.layout.addWidget(at.Z)
         at.layout.addWidget(at.syml); at.layout.addWidget(at.sym)
+        spacer = QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        at.layout.addItem(spacer)
         dif.layout = QHBoxLayout(dif)
         dif.layout.setContentsMargins(6,3,6,3)
         dif.E = QDoubleSpinBox()
+        #dif.E = QLabel()
         dif.El = QLabel("difference (E2 - E1)"); dif.Eu = QLabel("eV")
         dif.E.setButtonSymbols(QSpinBox.ButtonSymbols(2))
         dif.E.setRange(-1E10,1E10)
         dif.E.setSpecialValueText("   whatever")
+        #dif.E.setText("   whatever")
         dif.E.setReadOnly(True)
         dif.layout.addWidget(dif.El); dif.layout.addWidget(dif.E)
         dif.layout.addWidget(dif.Eu)
@@ -189,10 +196,10 @@ class calculator(QWidget):
         at.Z.blockSignals(False)
 
     def calcdiff(self):
-        E1 = self.config1.energy.E.value()
-        E2 = self.config2.energy.E.value()
-        if E1>=0 and E2>=0:
-            self.difference.E.setValue(E1-E2)
+        E1 = -self.config1.energy.energy
+        E2 = -self.config2.energy.energy
+        if E1<=0 and E2<=0:
+            self.difference.E.setValue(E2-E1)
         else:
             self.difference.E.setValue(-1E10)
 
@@ -225,17 +232,19 @@ class configuration(QGroupBox):
         self.layout.setSpacing(6)
         self.layout.setContentsMargins(6,3,6,3)
         en.layout.setContentsMargins(6,3,6,3)
-        en.E = QDoubleSpinBox(); en.El = QLabel("E"+str(i)+" total"); en.Eu = QLabel("eV")
-        en.E.setButtonSymbols(QSpinBox.ButtonSymbols(2))
-        en.E.setRange(-1,1E15)
-        en.E.setSpecialValueText("   enter structure")
-        en.E.setPrefix("-")
-        en.E.setReadOnly(True)
-        en.gr = QLineEdit()
-        en.zef = QLineEdit(); en.zefl = QLabel("Zeff (i)")
-        en.En = QLineEdit(); en.Enl = QLabel("-E (i)"); en.Enu = QLabel("eV")
+        en.E = QLabel(); en.El = QLabel("E"+str(i)+" total"); en.Eu = QLabel("eV")
+        #en.E.setButtonSymbols(QSpinBox.ButtonSymbols(2))
+        #en.E.setRange(-1,1E15)
+        #en.E.setSpecialValueText("   enter structure")
+        en.E.setText("   enter structure")
+        en.energy = 0.0
+        #en.E.setPrefix("-")
+        #en.E.setReadOnly(True)
+        en.gr = QLabel()
+        en.zef = QLabel(); en.zefl = QLabel("Zeff (i)")
+        en.zefl.setMinimumWidth(90)
+        en.En = QLabel(); en.Enl = QLabel("-E (i)"); en.Enu = QLabel("eV")
         self.struc = QLineEdit()
-        en.gr.setReadOnly(True); en.zef.setReadOnly(True); en.En.setReadOnly(True)
         # lay out widgets
         en.layout.addWidget(en.gr, 1, 2)
         en.layout.addWidget(en.zefl,2,1); en.layout.addWidget(en.zef,2,2)
@@ -288,15 +297,18 @@ class configuration(QGroupBox):
                     group = []; Zeff = []
                 else:
                     E = np.sum(En)
+        en.energy = E
         gstr = ""; zstr = ""; Estr = ""
-        colw = max(2, len(str(int(En[0])))) + 7
         for i in range(len(Zeff)):
+            colw = len(str(int(En[i]))) + 5
             gstr += group[i].ljust(colw)
             zstr += str("{0:.2f}".format(Zeff[i])).ljust(colw)
             Estr += str("{0:.2f}".format(En[i]/A[0][i,2])).ljust(colw)
+        Etot = "" if E==-1 else ("-"+"{0:.2f}".format(E))
+        en.gr.setText(gstr)
         en.zef.setText(zstr)
         en.En.setText(Estr)
-        en.E.setValue(E)
+        en.E.setText(Etot)
         cal.calcdiff()
 
     # test orbital string
@@ -378,7 +390,7 @@ class configuration(QGroupBox):
     def group(selfself,nlN):
         gr = []
         for nN in nlN:
-            gr.append(groups[nN[0]][nN[1]])
+            gr.append(groups[nN[0]-1][nN[1]])
         return gr
 
     # calculate Zeff array
