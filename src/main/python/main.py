@@ -16,7 +16,7 @@ from fbs_runtime.application_context.PyQt6 import ApplicationContext
 import numpy as np
 from PyQt6.QtWidgets import QWidget, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QLineEdit, QSpinBox, QDoubleSpinBox, QGroupBox, QLabel
 from PyQt6.QtCore import QTimer
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QFont
 
 import sys
 
@@ -76,6 +76,9 @@ structures = ['','1s1','1s2','[He] 2s1','[He] 2s2','[He] 2s2 2p1',
         '[Rn] 5f14 6d10 7s2 7p3','[Rn] 5f14 6d10 7s2 7p4',
         '[Rn] 5f14 6d10 7s2 7p5','[Rn] 5f14 6d10 7s2 7p6']
 
+groups = [['1s'],['2s2p','2s2p'],['3s3p','3s3p','3d'],['4s4p','4s4p','4d','4f'],['5s5p','5s5p','5d','5f'],
+          ['6s6p','6s6p','6d','6f','6g'],['7s7p','7s7p','7d','7f','7g','7h']]
+
 E0 = 13.6
 
 neff = [1,2,3,3.7,4.0,4.2]
@@ -86,8 +89,16 @@ class AppContext(ApplicationContext):
     def __init__(self):
         super(AppContext, self).__init__()
 
+        # font config
+        font = QFont()
+        font.setFamily("Courier")
+        font.setStyleHint(QFont.StyleHint.Monospace)
+        font.setFixedPitch(True)
+        font.setPointSize(14)
+
         self.window = QMainWindow()
         wind = self.window
+        wind.setFont(font)
         wind.title = 'Rule of Slater v'
         wind.left = 0
         wind.top = 0
@@ -220,16 +231,18 @@ class configuration(QGroupBox):
         en.E.setSpecialValueText("   enter structure")
         en.E.setPrefix("-")
         en.E.setReadOnly(True)
+        en.gr = QLineEdit()
         en.zef = QLineEdit(); en.zefl = QLabel("Zeff (i)")
         en.En = QLineEdit(); en.Enl = QLabel("-E (i)"); en.Enu = QLabel("eV")
         self.struc = QLineEdit()
-        en.zef.setReadOnly(True); en.En.setReadOnly(True)
+        en.gr.setReadOnly(True); en.zef.setReadOnly(True); en.En.setReadOnly(True)
         # lay out widgets
-        en.layout.addWidget(en.zefl,1,1); en.layout.addWidget(en.zef,1,2)
-        en.layout.addWidget(en.Enl,2,1); en.layout.addWidget(en.En,2,2)
-        en.layout.addWidget(en.Enu,2,3)
-        en.layout.addWidget(en.El,3,1); en.layout.addWidget(en.E,3,2)
-        en.layout.addWidget(en.Eu,3,3)
+        en.layout.addWidget(en.gr, 1, 2)
+        en.layout.addWidget(en.zefl,2,1); en.layout.addWidget(en.zef,2,2)
+        en.layout.addWidget(en.Enl,3,1); en.layout.addWidget(en.En,3,2)
+        en.layout.addWidget(en.Enu,3,3)
+        en.layout.addWidget(en.El,4,1); en.layout.addWidget(en.E,4,2)
+        en.layout.addWidget(en.Eu,4,3)
         self.layout.addWidget(QLabel("electronic structure "+str(i)))
         self.layout.addWidget(self.struc)
         self.layout.addWidget(en)
@@ -261,23 +274,26 @@ class configuration(QGroupBox):
             self.calculator.flashymessage(A,'red')
         else:
             Z = cal.atom.Z.value()
+            group = self.group(A[0])
             Zeff = self.Zeff(Z,A[0],A[1])
             if (Zeff < 0).any():
                 E = -1
                 self.calculator.flashymessage('   unstable anion','red')
-                Zeff = []
+                group = []; Zeff = []
             else:
                 En = self.En(A[0],Zeff)
                 if type(En) == bool:
                     E = -1
                     self.calculator.flashymessage('   n must be < 7','red')
-                    Zeff = []
+                    group = []; Zeff = []
                 else:
                     E = np.sum(En)
-        zstr = ""; Estr = ""
+        gstr = ""; zstr = ""; Estr = ""
+        colw = max(2, len(str(int(En[0])))) + 7
         for i in range(len(Zeff)):
-            zstr += "  " + str("{0:.2f}".format(Zeff[i]))
-            Estr += "  " + str("{0:.2f}".format(En[i]/A[0][i,2]))
+            gstr += group[i].ljust(colw)
+            zstr += str("{0:.2f}".format(Zeff[i])).ljust(colw)
+            Estr += str("{0:.2f}".format(En[i]/A[0][i,2])).ljust(colw)
         en.zef.setText(zstr)
         en.En.setText(Estr)
         en.E.setValue(E)
@@ -357,6 +373,13 @@ class configuration(QGroupBox):
                 if (nlN[i+j,1] < 2) and (nlN[i,0] == nlN[i+j,0] - 1):
                     sij[i+j,i] = 0.85
         return nlN, sij
+
+    # calculate groups array
+    def group(selfself,nlN):
+        gr = []
+        for nN in nlN:
+            gr.append(groups[nN[0]][nN[1]])
+        return gr
 
     # calculate Zeff array
     def Zeff(self,Z,nlN,sij):
