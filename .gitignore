@@ -1,1 +1,15 @@
 /target/
+/target/Icon.iconset/
+/target/PyInstaller/
+/target/ruleofSlater/
+/target/ruleofSlater.app/
+/target/ruleofSlater/lib-dynload/
+/target/ruleofSlater/numpy/
+/target/ruleofSlater/PyQt6/
+/target/ruleofSlater/setuptools-57.0.0.dist-info/
+/target/ruleofSlater/wheel-0.36.2.dist-info/
+/target/PyInstaller/ruleofSlater/
+/target/ruleofSlater.app/Contents/
+/target/ruleofSlater.app/Contents/_CodeSignature/
+/target/ruleofSlater.app/Contents/MacOS/
+/target/ruleofSlater.app/Contents/Resources/
