@@ -62,7 +62,7 @@
  [],
  False,
  False,
- 1662161727,
+ 1662418673,
  [('runw',
    '/Users/Ricardo/Documents/16G/Recherche/Simulation/ruleofSlater/venv/lib/python3.10/site-packages/PyInstaller/bootloader/Darwin-64bit/runw',
    'EXECUTABLE')])
