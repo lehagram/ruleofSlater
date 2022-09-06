@@ -6,18 +6,18 @@
 # ###                                                                   ####
 # ###                                     R. Garcia Serres  03/08/2022  ####
 # ##########################################################################
-# ###             application for PyQT6 and Python3                     ####
+# ###             application for PyQT5 and Python3                     ####
 # ##########################################################################
 
 
 from fbs_runtime import PUBLIC_SETTINGS
-from fbs_runtime.application_context.PyQt6 import ApplicationContext
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 import numpy as np
-from PyQt6.QtWidgets import QWidget, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QLineEdit, QSpinBox,\
-    QDoubleSpinBox, QGroupBox, QLabel, QSpacerItem, QSizePolicy
-from PyQt6.QtCore import QTimer
-from PyQt6.QtGui import QAction, QFont
+from PyQt5.QtWidgets import QWidget, QMainWindow, QVBoxLayout, QHBoxLayout, QGridLayout, QLineEdit, QSpinBox,\
+    QDoubleSpinBox, QGroupBox, QLabel, QSpacerItem, QSizePolicy, QAction
+from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QFont
 
 import sys
 
