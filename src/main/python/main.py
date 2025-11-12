@@ -10,7 +10,6 @@
 # ##########################################################################
 
 
-from fbs_runtime import PUBLIC_SETTINGS
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 import numpy as np
@@ -101,12 +100,12 @@ class AppContext(ApplicationContext):
         wind = self.window
         wind.font = font
         wind.setFont(font)
-        wind.title = 'Rule of Slater v'
+        wind.title = 'Rule of Slater'
         wind.left = 400
         wind.top = 200
         wind.width = 350
         wind.height = 100
-        wind.setWindowTitle(wind.title + PUBLIC_SETTINGS['version'])
+        wind.setWindowTitle(wind.title)
         wind.setGeometry(wind.left, wind.top, wind.width, wind.height)
         wind.statusBar().showMessage('tiny Slater calculator')
 
