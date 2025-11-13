@@ -137,6 +137,17 @@ class calculator(QWidget):
 
         self.MainApp = MainApp
         self.layout = QVBoxLayout(self)
+
+        # Instructions label
+        instructions = QLabel()
+        instructions.setText(
+            "1. Select element by typing symbol or atomic number\n"
+            "2. The ground state electronic structure is displayed\n"
+            "3. Modify structure 1 :  Changes are mirrored under structure 2\n"
+            "4. Modify structure 2 : The energy difference between structures 1 and 2 is displayed"
+        )
+        instructions.setStyleSheet("QLabel { padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 5px; }")
+
         self.atom = QGroupBox(); at = self.atom
         self.difference = QGroupBox(self); dif = self.difference
         self.config1 = configuration(self,1)
@@ -159,6 +170,7 @@ class calculator(QWidget):
         dif.E.setReadOnly(True)
         dif.layout.addWidget(dif.El); dif.layout.addWidget(dif.E)
         dif.layout.addWidget(dif.Eu)
+        self.layout.addWidget(instructions)
         self.layout.addWidget(at)
         self.layout.addWidget(self.config1)
         self.layout.addWidget(self.config2)

@@ -73,6 +73,15 @@ export default function Calculator() {
         </Typography>
       </Paper>
 
+      <Paper elevation={2} sx={{ p: 2, mb: 3, bgcolor: '#f0f0f0', border: '1px solid #ccc' }}>
+        <Typography variant="body2" sx={{ fontFamily: 'monospace', whiteSpace: 'pre-line' }}>
+          {`1. Select element by typing symbol or atomic number
+2. The ground state electronic structure is displayed
+3. Modify structure 1 :  Changes are mirrored under structure 2
+4. Modify structure 2 : The energy difference between structures 1 and 2 is displayed`}
+        </Typography>
+      </Paper>
+
       <Box sx={{ mb: 3 }}>
         <AtomSelector onAtomChange={handleAtomChange} />
       </Box>

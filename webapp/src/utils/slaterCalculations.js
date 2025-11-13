@@ -206,10 +206,10 @@ export function calculateZeff(Z, nlN, sij) {
 
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      if (i !== j) {
-        sig[i] += nlN[j][2] * sij[i][j];
-      }
+      sig[i] += nlN[j][2] * sij[i][j];
     }
+    // Subtract the diagonal element (same as Python: nlN[:,2] * sij - np.diag(np.diag(sij)))
+    sig[i] -= sij[i][i];
   }
 
   return sig.map(s => Z - s);
