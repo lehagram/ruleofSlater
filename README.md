@@ -10,15 +10,15 @@ This project provides an interactive calculator for computing effective nuclear 
 
 ## Versions
 
-### Desktop Application (PyQt6)
+### Desktop Application (PyQt5)
 
-The original desktop application built with PyQt6, providing a native GUI experience.
+The original desktop application built with PyQt5, providing a native GUI experience.
 
 **Location:** `src/main/python/`
 
 **Requirements:**
 - Python 3
-- PyQt6
+- PyQt5
 - NumPy
 - fbs (fman build system)
 
