@@ -44,8 +44,8 @@ export default function Calculator() {
   // Calculate energy difference (E2 - E1 with proper sign convention)
   const calculateDifference = () => {
     if (energy1 > 0 && energy2 > 0) {
-      // Match Python: E1 = -energy1, E2 = -energy2, diff = E2 - E1 = -energy2 - (-energy1) = energy1 - energy2
-      return energy1 - energy2;
+      // Match Python: E1 = -energy1, E2 = -energy2, diff = E2 - E1
+      return energy2 - energy1;
     }
     return null;
   };
