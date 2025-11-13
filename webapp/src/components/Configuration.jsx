@@ -3,8 +3,7 @@ import {
   Box,
   TextField,
   Typography,
-  Paper,
-  Grid
+  Paper
 } from '@mui/material';
 import { calculateEnergy } from '../utils/slaterCalculations';
 
@@ -118,139 +117,131 @@ export default function Configuration({
       />
 
       <Paper variant="outlined" sx={{ p: 2, bgcolor: 'grey.50' }}>
-        <Grid container spacing={2}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           {/* Groups row */}
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  minWidth: '90px',
-                  fontFamily: 'monospace',
-                  fontSize: '12px'
-                }}
-              >
-                {/* Empty label for groups */}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontFamily: 'monospace',
-                  fontSize: '12px',
-                  whiteSpace: 'pre'
-                }}
-              >
-                {results.groups.length > 0 ? formatArray(results.groups, columnWidths) : ''}
-              </Typography>
-            </Box>
-          </Grid>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                minWidth: '90px',
+                fontFamily: 'monospace',
+                fontSize: '12px'
+              }}
+            >
+              {/* Empty label for groups */}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                whiteSpace: 'pre'
+              }}
+            >
+              {results.groups.length > 0 ? formatArray(results.groups, columnWidths) : ''}
+            </Typography>
+          </Box>
 
           {/* Zeff row */}
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography
-                variant="caption"
-                sx={{
-                  minWidth: '90px',
-                  fontFamily: 'monospace',
-                  fontSize: '12px'
-                }}
-              >
-                Zeff (i)
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontFamily: 'monospace',
-                  fontSize: '12px',
-                  whiteSpace: 'pre'
-                }}
-              >
-                {results.zeff.length > 0 ? formatArray(results.zeff, columnWidths) : ''}
-              </Typography>
-            </Box>
-          </Grid>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                minWidth: '90px',
+                fontFamily: 'monospace',
+                fontSize: '12px'
+              }}
+            >
+              Zeff (i)
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                whiteSpace: 'pre'
+              }}
+            >
+              {results.zeff.length > 0 ? formatArray(results.zeff, columnWidths) : ''}
+            </Typography>
+          </Box>
 
           {/* Energy per electron row */}
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                minWidth: '90px',
+                fontFamily: 'monospace',
+                fontSize: '12px'
+              }}
+            >
+              -E (i)
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                whiteSpace: 'pre'
+              }}
+            >
+              {results.en.length > 0 ? formatArray(results.en, columnWidths) : ''}
+            </Typography>
+            {results.en.length > 0 && (
               <Typography
                 variant="caption"
                 sx={{
-                  minWidth: '90px',
+                  ml: 1,
                   fontFamily: 'monospace',
                   fontSize: '12px'
                 }}
               >
-                -E (i)
+                eV
               </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontFamily: 'monospace',
-                  fontSize: '12px',
-                  whiteSpace: 'pre'
-                }}
-              >
-                {results.en.length > 0 ? formatArray(results.en, columnWidths) : ''}
-              </Typography>
-              {results.en.length > 0 && (
-                <Typography
-                  variant="caption"
-                  sx={{
-                    ml: 1,
-                    fontFamily: 'monospace',
-                    fontSize: '12px'
-                  }}
-                >
-                  eV
-                </Typography>
-              )}
-            </Box>
-          </Grid>
+            )}
+          </Box>
 
           {/* Total energy row */}
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, pt: 1, borderTop: '1px solid #ddd' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, pt: 1, borderTop: '1px solid #ddd' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                minWidth: '90px',
+                fontFamily: 'monospace',
+                fontSize: '12px'
+              }}
+            >
+              E{rank} total
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                fontWeight: 'bold'
+              }}
+            >
+              {results.totalEnergy > 0
+                ? `-${formatNumber(results.totalEnergy)}`
+                : structure.trim() === ''
+                ? '   enter structure'
+                : ''}
+            </Typography>
+            {results.totalEnergy > 0 && (
               <Typography
                 variant="caption"
                 sx={{
-                  minWidth: '90px',
+                  ml: 1,
                   fontFamily: 'monospace',
                   fontSize: '12px'
                 }}
               >
-                E{rank} total
+                eV
               </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontFamily: 'monospace',
-                  fontSize: '12px',
-                  fontWeight: 'bold'
-                }}
-              >
-                {results.totalEnergy > 0
-                  ? `-${formatNumber(results.totalEnergy)}`
-                  : structure.trim() === ''
-                  ? '   enter structure'
-                  : ''}
-              </Typography>
-              {results.totalEnergy > 0 && (
-                <Typography
-                  variant="caption"
-                  sx={{
-                    ml: 1,
-                    fontFamily: 'monospace',
-                    fontSize: '12px'
-                  }}
-                >
-                  eV
-                </Typography>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
+            )}
+          </Box>
+        </Box>
       </Paper>
     </Paper>
   );
