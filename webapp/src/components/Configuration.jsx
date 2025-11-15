@@ -11,18 +11,19 @@ import { calculateEnergy } from '../utils/slaterCalculations';
  * Configuration component for electronic structure input and energy display
  * @param {number} rank - Configuration number (1 or 2)
  * @param {number} atomicNumber - Current atomic number
- * @param {string} defaultStructure - Default electronic structure
+ * @param {string} structure - Electronic structure (controlled)
+ * @param {function} onStructureChange - Callback when structure changes
  * @param {function} onEnergyChange - Callback when energy changes
  * @param {function} onError - Callback when error occurs
  */
 export default function Configuration({
   rank,
   atomicNumber,
-  defaultStructure,
+  structure,
+  onStructureChange,
   onEnergyChange,
   onError
 }) {
-  const [structure, setStructure] = useState(defaultStructure || '');
   const [results, setResults] = useState({
     totalEnergy: 0,
     groups: [],
@@ -30,13 +31,6 @@ export default function Configuration({
     en: [],
     error: null
   });
-
-  // Update structure when defaultStructure changes
-  useEffect(() => {
-    if (defaultStructure) {
-      setStructure(defaultStructure);
-    }
-  }, [defaultStructure]);
 
   // Recalculate when structure or atomic number changes
   useEffect(() => {
@@ -67,7 +61,7 @@ export default function Configuration({
   }, [structure, atomicNumber]);
 
   const handleStructureChange = (e) => {
-    setStructure(e.target.value);
+    onStructureChange(e.target.value);
   };
 
   // Format number for display

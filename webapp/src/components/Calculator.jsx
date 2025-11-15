@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -18,14 +18,46 @@ import { developStructure } from '../utils/slaterCalculations';
 export default function Calculator() {
   const [atomicNumber, setAtomicNumber] = useState(1);
   const [symbol, setSymbol] = useState('H');
+  const [structure1, setStructure1] = useState('');
+  const [structure2, setStructure2] = useState('');
   const [energy1, setEnergy1] = useState(0);
   const [energy2, setEnergy2] = useState(0);
   const [error, setError] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  // Get default structure for a given atomic number
+  const getDefaultStructureForZ = (z) => {
+    if (z > 0 && z < structures.length) {
+      return developStructure(structures[z]);
+    }
+    return '';
+  };
+
+  // Initialize structures on mount
+  useEffect(() => {
+    const initialStructure = getDefaultStructureForZ(1);
+    setStructure1(initialStructure);
+    setStructure2(initialStructure);
+  }, []);
+
   const handleAtomChange = (z, sym) => {
     setAtomicNumber(z);
     setSymbol(sym);
+    // Reset both structures when atom changes (no mirroring during reset)
+    const defaultStruct = getDefaultStructureForZ(z);
+    setStructure1(defaultStruct);
+    setStructure2(defaultStruct);
+  };
+
+  // Handler for config 1 structure changes - mirrors to config 2
+  const handleStructure1Change = (newStructure) => {
+    setStructure1(newStructure);
+    setStructure2(newStructure); // Mirror to config 2
+  };
+
+  // Handler for config 2 structure changes - no mirroring
+  const handleStructure2Change = (newStructure) => {
+    setStructure2(newStructure);
   };
 
   const handleError = (errorMsg) => {
@@ -51,14 +83,6 @@ export default function Calculator() {
   };
 
   const difference = calculateDifference();
-
-  // Get default structure for current atom
-  const getDefaultStructure = () => {
-    if (atomicNumber > 0 && atomicNumber < structures.length) {
-      return developStructure(structures[atomicNumber]);
-    }
-    return '';
-  };
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
@@ -91,7 +115,8 @@ export default function Calculator() {
         <Configuration
           rank={1}
           atomicNumber={atomicNumber}
-          defaultStructure={getDefaultStructure()}
+          structure={structure1}
+          onStructureChange={handleStructure1Change}
           onEnergyChange={setEnergy1}
           onError={handleError}
         />
@@ -101,7 +126,8 @@ export default function Calculator() {
         <Configuration
           rank={2}
           atomicNumber={atomicNumber}
-          defaultStructure={getDefaultStructure()}
+          structure={structure2}
+          onStructureChange={handleStructure2Change}
           onEnergyChange={setEnergy2}
           onError={handleError}
         />
