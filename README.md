@@ -59,6 +59,8 @@ The web app will be available at http://localhost:5173/
 
 For detailed instructions, see [webapp/README.md](webapp/README.md)
 
+Online web app available without installation on gitHub Pages at https://lehagram.github.io/ruleofSlater/
+
 ## Features
 
 - **Element Selection:** Choose elements by atomic number (Z=1 to Z=118) or symbol
