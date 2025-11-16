@@ -59,7 +59,7 @@ The web app will be available at http://localhost:5173/
 
 For detailed instructions, see [webapp/README.md](webapp/README.md)
 
-Also available without installation on gitHub Pages at https://lehagram.github.io/ruleofSlater/
+Also available online (gitHub Pages) at https://lehagram.github.io/ruleofSlater/
 
 ## Features
 
